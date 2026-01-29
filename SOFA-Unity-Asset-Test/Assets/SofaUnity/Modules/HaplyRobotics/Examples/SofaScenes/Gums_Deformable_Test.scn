@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<Node name="root" gravity="0 -9.81 0" timeStep="0.01">
+
+    <!-- Required plugins -->
+    <RequiredPlugin name="Sofa.Component.IO.Mesh"/>
+    <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/>
+    <RequiredPlugin name="Sofa.Component.MechanicalLoad"/>
+    <RequiredPlugin name="Sofa.Component.SolidMechanics.FEM.Elastic"/>
+    <RequiredPlugin name="Sofa.Component.StateContainer"/>
+    <RequiredPlugin name="Sofa.Component.Mapping.Linear"/>
+    <RequiredPlugin name="Sofa.Component.Visual"/>
+    <RequiredPlugin name="Sofa.Component.Collision.Geometry"/>
+    <RequiredPlugin name="Sofa.Component.Collision.Detection.Algorithm"/>
+    <RequiredPlugin name="Sofa.Component.Collision.Detection.Intersection"/>
+    <RequiredPlugin name="Sofa.Component.Collision.Response.Contact"/>
+
+    <!-- Animation & solvers -->
+    <DefaultAnimationLoop/>
+    <EulerImplicitSolver name="odesolver" rayleighStiffness="0.1" rayleighMass="0.1"/>
+    <CGLinearSolver name="linearsolver"
+                    iterations="50"
+                    tolerance="1e-9"
+                    threshold="1e-9"/>
+
+    <!-- ========================= -->
+    <!-- Deformable Gums -->
+    <!-- ========================= -->
+    <Node name="Gums">
+
+        <!-- Load tetrahedral mesh -->
+        <MeshGmshLoader name="loader" filename="./mesh/Gums.msh"/>
+
+        <!-- Topology -->
+        <TetrahedronSetTopologyContainer src="@loader"/>
+        <TetrahedronSetTopologyModifier/>
+        <TetrahedronSetGeometryAlgorithms/>
+
+        <!-- Mechanical state -->
+        <MechanicalObject name="dofs" template="Vec3d"/>
+
+        <!-- FEM force field (soft tissue) -->
+        <TetrahedronFEMForceField
+            name="fem"
+            youngModulus="5000"
+            poissonRatio="0.45"
+            method="large"/>
+
+        <!-- Optional damping -->
+        <UniformMass totalMass="0.05"/>
+
+        <!-- ========================= -->
+        <!-- Fixed constraint (temporary) -->
+        <!-- ========================= -->
+        <!-- This fixes ALL nodes for now just to verify stability -->
+        <!-- We will refine this later to only fix the gum base -->
+        <FixedConstraint indices="@loader.indices"/>
+
+        <!-- ========================= -->
+        <!-- Visual model -->
+        <!-- ========================= -->
+        <Node name="VisualModel">
+            <OglModel color="0.8 0.4 0.4 0.6"/>
+            <BarycentricMapping/>
+        </Node>
+
+        <!-- ========================= -->
+        <!-- Collision model -->
+        <!-- ========================= -->
+        <Node name="CollisionModel">
+            <TriangleCollisionModel/>
+            <LineCollisionModel/>
+            <PointCollisionModel/>
+            <BarycentricMapping/>
+        </Node>
+
+    </Node>
+
+</Node>
