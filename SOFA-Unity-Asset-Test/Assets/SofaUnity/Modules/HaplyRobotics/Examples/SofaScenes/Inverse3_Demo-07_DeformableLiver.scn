@@ -79,6 +79,7 @@
  
         <MeshGmshLoader filename="./mesh/liver2.msh" name="meshLoader" scale3d="6 6 6" rotation="0 20 0" translation="0  0 -2.1"/>
         <MechanicalObject name="dofs" src="@meshLoader" />
+        <FixedConstraint name="FixGum" indices="all"/>
 		<TetrahedronSetTopologyContainer name="TetraContainer" src="@meshLoader" />
         <TetrahedronSetTopologyModifier name="Modifier" />
         <TetrahedronSetGeometryAlgorithms template="Vec3d" name="GeomAlgo" drawTetrahedra="0" />

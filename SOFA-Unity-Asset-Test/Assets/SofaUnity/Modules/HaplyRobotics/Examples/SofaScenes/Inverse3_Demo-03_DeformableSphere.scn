@@ -69,8 +69,6 @@
         </Node>
     </Node> 
     
-    
-    
     <Node name="DeformableSphere">		
         <EulerImplicitSolver rayleighMass="0.01" rayleighStiffness="0.1" /> 
         <SparseLDLSolver template="CompressedRowSparseMatrixMat3x3d"/>
