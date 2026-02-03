@@ -43,7 +43,20 @@
     <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
     <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
 
+    <VisualStyle displayFlags="hideBehaviorModels hideCollisionModels hideMappings hideForceFields" />
+    
+    <FreeMotionAnimationLoop/>
+    <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
 
+    <CollisionPipeline name="pipeline" depth="6" verbose="0"/>
+    <BruteForceBroadPhase/>
+    <BVHNarrowPhase/>
+    <CollisionResponse name="response" response="FrictionContactConstraint" />
+    <LocalMinDistance name="proximity" alarmDistance="0.2" contactDistance="0.1" angleCone="0.1" />
+
+    <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
+    <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
+	
     <Node name="Instrument" >
         <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.01" rayleighMass="0.1" />
         <SparseLDLSolver template="CompressedRowSparseMatrixMat3x3d"/>
@@ -74,97 +87,5 @@
 
     </Node>
 
-    <Node name="Gum">
-        <VisualStyle displayFlags="showForceFields" />
-
-        <EulerImplicitSolver name="odesolver" />
-        <CGLinearSolver name="linearSolver" iterations="20" tolerance="1e-9" threshold="1e-9" />
-
-        <MeshGmshLoader name="volLoader" filename="./mesh/Gum_Single.msh" translation="0 -3.5 0.3" />
-
-        <TetrahedronSetTopologyContainer name="volume" src="@volLoader" />
-        
-        <MechanicalObject name="mecaGum" template="Vec3d" src="@volume" />
-        <TetrahedronSetTopologyModifier />
-        <TetrahedronSetGeometryAlgorithms />
-
-        <DiagonalMass massDensity="1.0" />
-
-        <TetrahedralCorotationalFEMForceField name="FEM" youngModulus="3000" poissonRatio="0.45" method="large" />
-
-        <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/>
-
-        <!-- Optional: anchor gum base -->
-        <!--
-        <BoxROI name="fixedROI" box="-50 -50 -50 50 0 50" />
-        <FixedConstraint indices="@fixedROI.indices" />
-        -->
-
-        <!-- ================= HIGH-RES VISUAL SURFACE ================= -->
-        <Node name="VisualModel">
-            <MeshOBJLoader name="visualLoader" filename="./mesh/Gum_Single.obj" />
-
-            <TriangleSetTopologyContainer name="triTopo" src="@visualLoader" />
-            <MechanicalObject name="visualState" template="Vec3d" />
-            <TriangleSetTopologyModifier />
-            <TriangleSetGeometryAlgorithms />
-
-            <BarycentricMapping name="mapping" input="@../mecaGum" output="@visualState" />
-
-            <Node name="RenderNode">
-                <OglModel name="visual" src="@../visualLoader" color="1 0.7 0.7" />
-            </Node>
-        </Node>
-        
-        <Node name="CollisionModel">
-
-            <MeshOBJLoader name="colLoader" filename="./mesh/Gum_Single.obj" />
-
-            <TriangleSetTopologyContainer name="colTopo" src="@colLoader" />
-            <MechanicalObject name="colState" template="Vec3d" src="@colTopo" />
-            <TriangleSetTopologyModifier />
-            <TriangleSetGeometryAlgorithms />
-
-            <TriangleCollisionModel />
-            <LineCollisionModel />
-            <PointCollisionModel />
-
-            <BarycentricMapping input="@../mecaGum" output="@colState" />
-        </Node>
-    </Node>
+    
 </Node>
-
-    <!-- <Node name="Gum">
-        <VisualStyle displayFlags="showForceFields" />
-        <MeshGmshLoader name="volGum" filename="./mesh/Gum_Single.msh" />
-        <EulerImplicitSolver name="odesolver" />
-        <CGLinearSolver iterations="10" name="linear solver" tolerance="1.0e-9" threshold="1.0e-9" />
-        <MechanicalObject name="mecaGum" />
-        <TetrahedronSetTopologyContainer name="volume" src="@volGum" />
-        <TetrahedronSetGeometryAlgorithms name="GeomAlgo"/>
-        <DiagonalMass massDensity="1" name="computed using mass density" />
-        <TetrahedralCorotationalFEMForceField name="FEM" youngModulus="3000" poissonRatio="0.45" method="large" />
-
-        <Node name="GumVisualModel">
-            <TriangleSetTopologyContainer name="triTopo" />
-            <TriangleSetTopologyModifier />
-            <TriangleSetGeometryAlgorithms />
-
-            <Tetra2TriangleTopologicalMapping input="@../volume" output="@triTopo" />
-
-            <MechanicalObject name="visualState" template="Vec3d" src="@triTopo" />
-
-            <OglModel name="visualModel" color="1 0.7 0.7" />
-
-            <BarycentricMapping input="@../mecaGum" output="@visualState" />
-        </Node>
-        <Node name="TongueCollisionModel">
-            <TriangleSetTopologyContainer name="TriContainer" />
-            <TriangleSetTopologyModifier name="Modifier" />
-            <TriangleSetGeometryAlgorithms name="GeomAlgo" />
-            <Tetra2TriangleTopologicalMapping name="mapping" input="@../volume" output="@TriContainer" flipNormals="0" />
-            <MechanicalObject name="colGum" />
-            <TriangleCollisionModel name="gum" />
-            <IdentityMapping name="identityMappingToCollision" input="@../mecaGum" output="@colGum" isMechanical="false" />
-        </Node>
-    </Node> -->
