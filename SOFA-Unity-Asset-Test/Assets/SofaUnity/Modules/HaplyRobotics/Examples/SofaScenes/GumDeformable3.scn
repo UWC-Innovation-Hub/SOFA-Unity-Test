@@ -28,22 +28,6 @@
         <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->  
         <RequiredPlugin name="SofaHaplyRobotics"/>
     </Node>
-
-    <VisualStyle displayFlags="hideBehaviorModels hideCollisionModels hideMappings hideForceFields" />
-    
-    <FreeMotionAnimationLoop/>
-    <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
-
-    <CollisionPipeline name="pipeline" depth="6" verbose="0"/>
-    <BruteForceBroadPhase/>
-    <BVHNarrowPhase/>
-    <CollisionResponse name="response" response="FrictionContactConstraint" />
-    <LocalMinDistance name="proximity" alarmDistance="0.2" contactDistance="0.1" angleCone="0.1" />
-
-    <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
-    <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
-
-    <VisualStyle displayFlags="hideBehaviorModels hideCollisionModels hideMappings hideForceFields" />
     
     <FreeMotionAnimationLoop/>
     <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
@@ -87,5 +71,41 @@
 
     </Node>
 
-    
+    <Node name="Gum">
+        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.1" rayleighMass="0.1" />
+        <CGLinearSolver name="linear solver" iterations="25" tolerance="1e-10" threshold="10e-10" />
+
+        <MeshGmshLoader filename="./mesh/Gum_Single.msh" name="meshLoader" scale3d="4 4 4" rotation="0 20 0" translation="0  1 -2.1"/>
+
+        <MechanicalObject name="dofs" src="@meshLoader" />
+
+        <TetrahedronSetTopologyContainer name="TetraContainer" src="@meshLoader" />
+        <TetrahedronSetTopologyModifier name="Modifier" />
+        <TetrahedronSetGeometryAlgorithms template="Vec3d" name="GeomAlgo" drawTetrahedra="0" />
+
+        <TetrahedronFEMForceField name="FEM" youngModulus="60000"  poissonRatio="0.45" method="large" /> <!-- could use youngModulus="3000"-->
+
+        <DiagonalMass massDensity="300.0" topology="@TetraContainer" geometryState="@dofs"/>
+        <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/>
+        <PrecomputedConstraintCorrection recompute="1" printLog="1" fileCompliance="./Gum_Single.comp" />
+
+        <!-- Fix a region of the gum so it stays in place -->
+        <BoxROI name="FixedROI" box="-20 -20 -20 20 20 -1" drawBoxes="0" />
+        <FixedProjectiveConstraint indices="@FixedROI.indices" />
+
+        <Node name="GumSurface">
+            <TriangleSetTopologyContainer  name="TriContainer1" fileTopology="" tags=" " />
+			<TriangleSetTopologyModifier   name="TriModifier1" />
+			<TriangleSetGeometryAlgorithms name="TriGeomAlgo1" template="Vec3d" />
+            <Tetra2TriangleTopologicalMapping input="@../TetraContainer" output="@TriContainer1"/>
+            <TriangleCollisionModel />
+            <LineCollisionModel />
+            <PointCollisionModel /> 
+            <Node name="GumVisual">
+                <OglModel name="Visual" color="red"/>
+                <IdentityMapping input="@../" output="@Visual" />
+            </Node>
+        </Node>
+
+    </Node>
 </Node>
