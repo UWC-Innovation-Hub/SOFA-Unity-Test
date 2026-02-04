@@ -74,7 +74,7 @@
     </Node>
 
     <Node name="Gum">
-        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.3" rayleighMass="0.6" />
+        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.1" rayleighMass="0.2" />
         <CGLinearSolver name="linear solver" iterations="25" tolerance="1e-10" threshold="10e-10" />
  
         <MeshGmshLoader filename="./mesh/Gum_Single.msh" name="meshLoader" scale3d="3 3 3" rotation="0 0 0" translation="0  0 -2.1"/>
@@ -83,7 +83,7 @@
         <TetrahedronSetTopologyModifier name="Modifier" />
         <TetrahedronSetGeometryAlgorithms template="Vec3d" name="GeomAlgo" drawTetrahedra="0" />
 
-        <TetrahedronFEMForceField name="FEM" youngModulus="3000" poissonRatio="0.49" method="large" />
+        <TetrahedronFEMForceField name="FEM" youngModulus="30000" poissonRatio="0.49" method="large" />
         <DiagonalMass massDensity="300.0" topology="@TetraContainer" geometryState="@dofs"/>
         
         <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/>
