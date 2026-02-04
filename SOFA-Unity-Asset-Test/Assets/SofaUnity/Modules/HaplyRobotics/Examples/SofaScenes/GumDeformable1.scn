@@ -74,24 +74,23 @@
     </Node>
 
     <Node name="Gum">
-        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.01" rayleighMass="0.01" />
+        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.3" rayleighMass="0.6" />
         <CGLinearSolver name="linear solver" iterations="25" tolerance="1e-10" threshold="10e-10" />
  
-        <MeshGmshLoader filename="./mesh/Gum_Single.msh" name="meshLoader" scale3d="3 3 3" rotation="0 20 0" translation="0  0 -2.1"/>
+        <MeshGmshLoader filename="./mesh/Gum_Single.msh" name="meshLoader" scale3d="3 3 3" rotation="0 0 0" translation="0  0 -2.1"/>
         <MechanicalObject name="dofs" src="@meshLoader" />
 		<TetrahedronSetTopologyContainer name="TetraContainer" src="@meshLoader" />
         <TetrahedronSetTopologyModifier name="Modifier" />
         <TetrahedronSetGeometryAlgorithms template="Vec3d" name="GeomAlgo" drawTetrahedra="0" />
 
-        <TetrahedronFEMForceField name="FEM" youngModulus="60000" poissonRatio="0.49" method="large" />
-        <DiagonalMass massDensity="250.0" topology="@TetraContainer" geometryState="@dofs"/>
+        <TetrahedronFEMForceField name="FEM" youngModulus="3000" poissonRatio="0.49" method="large" />
+        <DiagonalMass massDensity="300.0" topology="@TetraContainer" geometryState="@dofs"/>
         
         <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/>
         <PrecomputedConstraintCorrection recompute="0" printLog="0" fileCompliance="./Gum-7314-0.01.comp" />
 
-        <BoxROI name="AllROI" box="-999 -999 -999 999 999 999" />
-        <FixedProjectiveConstraint indices="@AllROI.indices" />
-
+        <BoxROI name="FixedROI" box="-3.5 -3.5 -5.0 3.5 3.5 -3.2" drawBoxes="1" />
+        <FixedProjectiveConstraint indices="@FixedROI.indices" />
 
         <Node name="Surface">
 			<TriangleSetTopologyContainer  name="TriContainer1" fileTopology="" tags=" " />
