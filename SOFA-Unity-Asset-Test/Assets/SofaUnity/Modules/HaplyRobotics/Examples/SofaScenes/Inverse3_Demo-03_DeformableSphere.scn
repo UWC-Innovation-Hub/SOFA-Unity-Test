@@ -25,11 +25,15 @@
         <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [TriangleSetGeometryAlgorithms,TriangleSetTopologyContainer,TriangleSetTopologyModifier] -->  
         <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [SparseGridRamificationTopology] -->  
         <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->  
-        <RequiredPlugin name="SofaHaplyRobotics"/>
+        <!-- <RequiredPlugin name="SofaHaplyRobotics"/> -->
+        <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->  
+
     </Node>
 
     <FreeMotionAnimationLoop/>
     <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
+
+    <VisualStyle displayFlags="showVisual showBehavior showForceFields showInteractionForceFields showCollision showCollisionModels showWireframe" />
 
     <CollisionPipeline name="pipeline" depth="6" verbose="0"/>
     <BruteForceBroadPhase/>
@@ -37,7 +41,7 @@
     <CollisionResponse name="response" response="FrictionContactConstraint" />
     <LocalMinDistance name="proximity" alarmDistance="0.1" contactDistance="0.01" angleCone="0.1" />
 
-    <Haply_Inverse3Controller name="Device" scale="30.0" drawDebug="0" printLog="0" />
+    <!-- <Haply_Inverse3Controller name="Device" scale="30.0" drawDebug="0" printLog="0" />
     <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
 	
     <Node name="Instrument" >
@@ -67,7 +71,7 @@
             <PointCollisionModel />
             <RigidMapping name="MM->CM mapping" input="@instrumentState" output="@instrumentCollisionState" />		
         </Node>
-    </Node> 
+    </Node>  -->
     
     <Node name="DeformableSphere">		
         <EulerImplicitSolver rayleighMass="0.01" rayleighStiffness="0.1" /> 
