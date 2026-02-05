@@ -1,6 +1,6 @@
 # Blender 4.4.3
 # www.blender.org
-mtllib GumTest1.mtl
+mtllib CylinderThick.mtl
 o Cylinder
 v -0.000000 -0.952381 -1.407593
 v 0.000000 0.952381 -1.407593

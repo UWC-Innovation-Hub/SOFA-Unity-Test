@@ -77,7 +77,7 @@
         <EulerImplicitSolver rayleighMass="0.2" rayleighStiffness="0.2" />
         <SparseLDLSolver template="CompressedRowSparseMatrixMat3x3d"/>
 
-        <MeshOBJLoader name="loaderSurface" filename="./mesh/GumTest1.obj" scale3d="1 1 1" rotation="0 0 0" translation="0 0 0" />
+        <MeshOBJLoader name="loaderSurface" filename="./mesh/CylinderThick.obj" scale3d="1 1 1" rotation="0 0 0" translation="0 0 0" />
         <SparseGridRamificationTopology name="grid" n="6 6 6" src="@./loaderSurface" nbVirtualFinerLevels="3" finestConnectivity="0"/>
 
         <MechanicalObject name="gridDof" position="@grid.position"/>
