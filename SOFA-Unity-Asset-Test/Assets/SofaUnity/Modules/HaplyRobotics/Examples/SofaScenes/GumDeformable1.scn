@@ -25,15 +25,12 @@
         <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [TetrahedronSetGeometryAlgorithms,TetrahedronSetTopologyContainer,TetrahedronSetTopologyModifier,TriangleSetGeometryAlgorithms,TriangleSetTopologyContainer,TriangleSetTopologyModifier] -->  
         <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [SparseGridRamificationTopology] -->  
         <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Tetra2TriangleTopologicalMapping] -->  
-        <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->  
         <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
         <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->  
         <RequiredPlugin name="Sofa.Component.Engine.Select"/> <!-- Needed to use components [BoxROI] -->  
         <RequiredPlugin name="SofaHaplyRobotics"/>
     </Node>
 
-    <VisualStyle displayFlags="showVisual showBehavior showForceFields showInteractionForceFields showCollision showCollisionModels showWireframe" />
-    
     <FreeMotionAnimationLoop/>
     <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
 
@@ -54,7 +51,7 @@
 		<UniformMass name="mass" totalMass="1.0" />
 		
 		<RestShapeSpringsForceField stiffness='1000000' angularStiffness='1000000' external_rest_shape='@../HaplyMO' points='0' external_points='0'/>
-        <LCPForceFeedback name="LCPFF1" activate="true" forceCoef="0.00005" />
+        <LCPForceFeedback name="LCPFF1" activate="true" forceCoef="0.0001" />
         <LinearSolverConstraintCorrection />
 		
 		<Node name="VisuTool" >
@@ -80,7 +77,7 @@
         <EulerImplicitSolver rayleighMass="0.2" rayleighStiffness="0.2" />
         <SparseLDLSolver template="CompressedRowSparseMatrixMat3x3d"/>
 
-        <MeshOBJLoader name="loaderSurface" filename="./mesh/GumTest1.obj" scale3d="2 2 2" rotation="0 0 0" translation="0  0" />
+        <MeshOBJLoader name="loaderSurface" filename="./mesh/GumTest1.obj" scale3d="1 1 1" rotation="0 0 0" translation="0 0 0" />
         <SparseGridRamificationTopology name="grid" n="6 6 6" src="@./loaderSurface" nbVirtualFinerLevels="3" finestConnectivity="0"/>
 
         <MechanicalObject name="gridDof" position="@grid.position"/>
@@ -89,7 +86,7 @@
         <DiagonalMass totalMass="10.0" topology="@grid" geometryState="@gridDof"/>
         <RestShapeSpringsForceField name="shapeSprings" stiffness="6000" />
 
-        <BoxROI name="boxRoi1" box="-0.892 -0.748 -1.105 0.930 -0.410 0.993" drawBoxes="1" />
+        <BoxROI name="boxRoi1" box="-1.490393 -0.988095 -1.490393 1.490393 -0.6916665 1.490393" drawBoxes="1" />
         <FixedProjectiveConstraint indices="@boxRoi1.indices" />
 
         <LinearSolverConstraintCorrection />
