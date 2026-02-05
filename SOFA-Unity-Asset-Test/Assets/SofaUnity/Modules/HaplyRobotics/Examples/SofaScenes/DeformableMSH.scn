@@ -1,35 +1,37 @@
 <?xml version="1.0" ?>
-<Node name="root" dt="0.05" showBoundingTree="0" gravity="0 0 0">
+<Node name="root" dt="0.01" gravity="0 0 0" >
     <Node name="RequiredPlugins">
         <RequiredPlugin name="Sofa.Component.AnimationLoop"/> <!-- Needed to use components [FreeMotionAnimationLoop] -->  
         <RequiredPlugin name="Sofa.Component.Collision.Detection.Algorithm"/> <!-- Needed to use components [BVHNarrowPhase,BruteForceBroadPhase,CollisionPipeline] -->  
         <RequiredPlugin name="Sofa.Component.Collision.Detection.Intersection"/> <!-- Needed to use components [LocalMinDistance] -->  
         <RequiredPlugin name="Sofa.Component.Collision.Geometry"/> <!-- Needed to use components [LineCollisionModel,PointCollisionModel,TriangleCollisionModel] -->  
         <RequiredPlugin name="Sofa.Component.Collision.Response.Contact"/> <!-- Needed to use components [CollisionResponse] -->  
-        <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/> <!-- Needed to use components [LinearSolverConstraintCorrection] -->  
+        <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/> <!-- Needed to use components [LinearSolverConstraintCorrection,PrecomputedConstraintCorrection] -->  
         <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Solver"/> <!-- Needed to use components [LCPConstraintSolver] -->  
-        <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->  
-        <RequiredPlugin name="Sofa.Component.Engine.Select"/> <!-- Needed to use components [BoxROI] -->  
         <RequiredPlugin name="Sofa.Component.Haptics"/> <!-- Needed to use components [LCPForceFeedback] -->  
-        <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshOBJLoader] -->  
+        <RequiredPlugin name="Sofa.Component.IO.Mesh"/> <!-- Needed to use components [MeshGmshLoader,MeshOBJLoader] -->  
         <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/> <!-- Needed to use components [SparseLDLSolver] -->  
-        <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [BarycentricMapping,IdentityMapping] -->  
+        <RequiredPlugin name="Sofa.Component.LinearSolver.Iterative"/> <!-- Needed to use components [CGLinearSolver] -->  
+        <RequiredPlugin name="Sofa.Component.Mapping.Linear"/> <!-- Needed to use components [IdentityMapping] -->  
         <RequiredPlugin name="Sofa.Component.Mapping.NonLinear"/> <!-- Needed to use components [RigidMapping] -->  
         <RequiredPlugin name="Sofa.Component.Mass"/> <!-- Needed to use components [DiagonalMass,UniformMass] -->  
+        <RequiredPlugin name="Sofa.Component.MechanicalLoad"/> <!-- Needed to use components [PlaneForceField] -->  
         <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/> <!-- Needed to use components [EulerImplicitSolver] -->  
         <RequiredPlugin name="Sofa.Component.SceneUtility"/> <!-- Needed to use components [InfoComponent] -->  
         <RequiredPlugin name="Sofa.Component.SolidMechanics.FEM.Elastic"/> <!-- Needed to use components [TetrahedronFEMForceField] -->  
         <RequiredPlugin name="Sofa.Component.SolidMechanics.Spring"/> <!-- Needed to use components [RestShapeSpringsForceField] -->  
         <RequiredPlugin name="Sofa.Component.StateContainer"/> <!-- Needed to use components [MechanicalObject] -->  
         <RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/> <!-- Needed to use components [MeshTopology] -->  
-        <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [TetrahedronSetGeometryAlgorithms,TetrahedronSetTopologyContainer,TetrahedronSetTopologyModifier,TriangleSetGeometryAlgorithms,TriangleSetTopologyContainer,TriangleSetTopologyModifier] -->  
-        <RequiredPlugin name="Sofa.Component.Topology.Container.Grid"/> <!-- Needed to use components [RegularGridTopology] -->  
-        <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Hexa2TetraTopologicalMapping,Tetra2TriangleTopologicalMapping] -->  
-        <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->  
-        <RequiredPlugin name="SofaHaplyRobotics"/>
+        <RequiredPlugin name="Sofa.Component.Topology.Container.Dynamic"/> <!-- Needed to use components [TetrahedronSetGeometryAlgorithms,TetrahedronSetTopologyContainer,TetrahedronSetTopologyModifier,TriangleSetGeometryAlgorithms,TriangleSetTopologyContainer,TriangleSetTopologyModifier] -->
+        <RequiredPlugin name="Sofa.Component.Topology.Mapping"/> <!-- Needed to use components [Tetra2TriangleTopologicalMapping] -->  
+        <RequiredPlugin name="Sofa.Component.Visual"/> <!-- Needed to use components [VisualStyle] -->  
+        <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
+        <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->  
+        <RequiredPlugin name="Sofa.Component.Engine.Select"/> <!-- Needed to use components [BoxROI] -->  
+        <!-- <RequiredPlugin name="SofaHaplyRobotics"/> -->
     </Node>
 
-    <VisualStyle displayFlags="hideBehaviorModels hideCollisionModels hideMappings hideForceFields" />
+    <!-- <VisualStyle displayFlags="showVisual showBehavior showForceFields showInteractionForceFields showCollision showCollisionModels showWireframe" /> -->
     
     <FreeMotionAnimationLoop/>
     <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
@@ -40,10 +42,9 @@
     <CollisionResponse name="response" response="FrictionContactConstraint" />
     <LocalMinDistance name="proximity" alarmDistance="0.2" contactDistance="0.1" angleCone="0.1" />
 
-    <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
+    <!-- <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
     <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
-
-
+	
     <Node name="Instrument" >
         <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.01" rayleighMass="0.1" />
         <SparseLDLSolver template="CompressedRowSparseMatrixMat3x3d"/>
@@ -72,99 +73,36 @@
             <RigidMapping name="MM->CM mapping" input="@instrumentState" output="@instrumentCollisionState" />		
         </Node>
 
-    </Node>
+    </Node> -->
 
     <Node name="Gum">
-        <VisualStyle displayFlags="showForceFields" />
+        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.1" rayleighMass="0.1" />
+        <CGLinearSolver name="linear solver" iterations="25" tolerance="1e-10" threshold="10e-10" />
+ 
+        <MeshGmshLoader filename="./mesh/CylinderThick.msh" name="meshLoader" scale3d="3 3 3" rotation="0 0 0" translation="0 0 3"/>
+        <MechanicalObject name="dofs" src="@meshLoader" />
+		<TetrahedronSetTopologyContainer name="TetraContainer" src="@meshLoader" />
+        <TetrahedronSetTopologyModifier name="Modifier" />
+        <TetrahedronSetGeometryAlgorithms template="Vec3d" name="GeomAlgo" drawTetrahedra="0" />
 
-        <EulerImplicitSolver name="odesolver" />
-        <CGLinearSolver name="linearSolver" iterations="20" tolerance="1e-9" threshold="1e-9" />
-
-        <MeshGmshLoader name="volLoader" filename="./mesh/Gum_Single.msh" translation="0 -3.5 0.3" />
-
-        <TetrahedronSetTopologyContainer name="volume" src="@volLoader" />
+        <TetrahedronFEMForceField name="FEM" youngModulus="80000" poissonRatio="0.49" method="large" />
+        <DiagonalMass massDensity="10.0" topology="@TetraContainer" geometryState="@dofs"/>
         
-        <MechanicalObject name="mecaGum" template="Vec3d" src="@volume" />
-        <TetrahedronSetTopologyModifier />
-        <TetrahedronSetGeometryAlgorithms />
+        <!-- <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/> -->
+        <PrecomputedConstraintCorrection recompute="1" printLog="1" fileCompliance="./CylinderThick.comp" />
 
-        <DiagonalMass massDensity="1.0" />
-
-        <TetrahedralCorotationalFEMForceField name="FEM" youngModulus="3000" poissonRatio="0.45" method="large" />
-
-        <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/>
-
-        <!-- Optional: anchor gum base -->
-        <!--
-        <BoxROI name="fixedROI" box="-50 -50 -50 50 0 50" />
-        <FixedConstraint indices="@fixedROI.indices" />
-        -->
-
-        <!-- ================= HIGH-RES VISUAL SURFACE ================= -->
-        <Node name="VisualModel">
-            <MeshOBJLoader name="visualLoader" filename="./mesh/Gum_Single.obj" />
-
-            <TriangleSetTopologyContainer name="triTopo" src="@visualLoader" />
-            <MechanicalObject name="visualState" template="Vec3d" />
-            <TriangleSetTopologyModifier />
-            <TriangleSetGeometryAlgorithms />
-
-            <BarycentricMapping name="mapping" input="@../mecaGum" output="@visualState" />
-
-            <Node name="RenderNode">
-                <OglModel name="visual" src="@../visualLoader" color="1 0.7 0.7" />
-            </Node>
-        </Node>
-        
-        <Node name="CollisionModel">
-
-            <MeshOBJLoader name="colLoader" filename="./mesh/Gum_Single.obj" />
-
-            <TriangleSetTopologyContainer name="colTopo" src="@colLoader" />
-            <MechanicalObject name="colState" template="Vec3d" src="@colTopo" />
-            <TriangleSetTopologyModifier />
-            <TriangleSetGeometryAlgorithms />
-
+        <Node name="Surface">
+			<TriangleSetTopologyContainer  name="TriContainer1" fileTopology="" tags=" " />
+			<TriangleSetTopologyModifier   name="TriModifier1" />
+			<TriangleSetGeometryAlgorithms name="TriGeomAlgo1" template="Vec3d" />
+            <Tetra2TriangleTopologicalMapping input="@../TetraContainer" output="@TriContainer1"/>
             <TriangleCollisionModel />
             <LineCollisionModel />
-            <PointCollisionModel />
-
-            <BarycentricMapping input="@../mecaGum" output="@colState" />
+            <PointCollisionModel /> 
+            <Node name="Visu1">
+                <OglModel name="Visual" texturename="textures/colorMap.png" />
+                <IdentityMapping input="@../" output="@Visual" />
+            </Node>
         </Node>
     </Node>
 </Node>
-
-    <!-- <Node name="Gum">
-        <VisualStyle displayFlags="showForceFields" />
-        <MeshGmshLoader name="volGum" filename="./mesh/Gum_Single.msh" />
-        <EulerImplicitSolver name="odesolver" />
-        <CGLinearSolver iterations="10" name="linear solver" tolerance="1.0e-9" threshold="1.0e-9" />
-        <MechanicalObject name="mecaGum" />
-        <TetrahedronSetTopologyContainer name="volume" src="@volGum" />
-        <TetrahedronSetGeometryAlgorithms name="GeomAlgo"/>
-        <DiagonalMass massDensity="1" name="computed using mass density" />
-        <TetrahedralCorotationalFEMForceField name="FEM" youngModulus="3000" poissonRatio="0.45" method="large" />
-
-        <Node name="GumVisualModel">
-            <TriangleSetTopologyContainer name="triTopo" />
-            <TriangleSetTopologyModifier />
-            <TriangleSetGeometryAlgorithms />
-
-            <Tetra2TriangleTopologicalMapping input="@../volume" output="@triTopo" />
-
-            <MechanicalObject name="visualState" template="Vec3d" src="@triTopo" />
-
-            <OglModel name="visualModel" color="1 0.7 0.7" />
-
-            <BarycentricMapping input="@../mecaGum" output="@visualState" />
-        </Node>
-        <Node name="TongueCollisionModel">
-            <TriangleSetTopologyContainer name="TriContainer" />
-            <TriangleSetTopologyModifier name="Modifier" />
-            <TriangleSetGeometryAlgorithms name="GeomAlgo" />
-            <Tetra2TriangleTopologicalMapping name="mapping" input="@../volume" output="@TriContainer" flipNormals="0" />
-            <MechanicalObject name="colGum" />
-            <TriangleCollisionModel name="gum" />
-            <IdentityMapping name="identityMappingToCollision" input="@../mecaGum" output="@colGum" isMechanical="false" />
-        </Node>
-    </Node> -->
