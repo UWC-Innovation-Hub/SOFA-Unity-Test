@@ -28,7 +28,7 @@
         <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/> <!-- Needed to use components [OglModel] -->
         <RequiredPlugin name="Sofa.Component.Constraint.Projective"/> <!-- Needed to use components [FixedProjectiveConstraint] -->  
         <RequiredPlugin name="Sofa.Component.Engine.Select"/> <!-- Needed to use components [BoxROI] -->  
-        <!-- <RequiredPlugin name="SofaHaplyRobotics"/> -->
+        <RequiredPlugin name="SofaHaplyRobotics"/>
     </Node>
 
     <!-- <VisualStyle displayFlags="showVisual showBehavior showForceFields showInteractionForceFields showCollision showCollisionModels showWireframe" /> -->
@@ -42,7 +42,7 @@
     <CollisionResponse name="response" response="FrictionContactConstraint" />
     <LocalMinDistance name="proximity" alarmDistance="0.2" contactDistance="0.1" angleCone="0.1" />
 
-    <!-- <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
+    <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
     <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
 	
     <Node name="Instrument" >
@@ -73,13 +73,13 @@
             <RigidMapping name="MM->CM mapping" input="@instrumentState" output="@instrumentCollisionState" />		
         </Node>
 
-    </Node> -->
+    </Node>
 
     <Node name="Gum">
         <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.1" rayleighMass="0.1" />
         <CGLinearSolver name="linear solver" iterations="25" tolerance="1e-10" threshold="10e-10" />
  
-        <MeshGmshLoader filename="./mesh/CylinderThick.msh" name="meshLoader" scale3d="3 3 3" rotation="0 0 0" translation="0 0 3"/>
+        <MeshGmshLoader filename="./mesh/CylinderThin.msh" name="meshLoader" scale3d="3 3 3" rotation="0 0 0" translation="0 0 3"/>
         <MechanicalObject name="dofs" src="@meshLoader" />
 		<TetrahedronSetTopologyContainer name="TetraContainer" src="@meshLoader" />
         <TetrahedronSetTopologyModifier name="Modifier" />
@@ -89,7 +89,7 @@
         <DiagonalMass massDensity="10.0" topology="@TetraContainer" geometryState="@dofs"/>
         
         <!-- <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/> -->
-        <PrecomputedConstraintCorrection recompute="1" printLog="1" fileCompliance="./CylinderThick.comp" />
+        <PrecomputedConstraintCorrection recompute="1" printLog="1" />
 
         <Node name="Surface">
 			<TriangleSetTopologyContainer  name="TriContainer1" fileTopology="" tags=" " />
