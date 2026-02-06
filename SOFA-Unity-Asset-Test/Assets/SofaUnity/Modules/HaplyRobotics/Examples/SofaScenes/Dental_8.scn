@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<Node name="root" dt="0.005">
+    <RequiredPlugin name="SofaOpenglVisual"/>
+    <BackgroundSetting color="0.901960784 0.925490196 0.964705882" />
+    <RequiredPlugin name="SofaHaplyRobotics"/>
+
+    <Gravity name="G" gravity="0 0 0" />
+    <CollisionPipeline name="pipeline" depth="6" verbose="0" />
+    <BruteForceBroadPhase/>
+    <BVHNarrowPhase/>
+    <CollisionResponse name="response" response="FrictionContactConstraint" />
+    <LocalMinDistance name="proximity" alarmDistance="0.3" contactDistance="0.15" angleCone="0.0" />
+    <FreeMotionAnimationLoop />
+    <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
+
+    <Haply_Inverse3Controller name="Device" scale="20.0" drawDebug="1" printLog="0"/>
+    <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
+
+    <Node name="input-tongue">
+        <MeshTopology name="surface" filename="./mesh/tongue.obj" />
+        <MeshTetraStuffing name="stuffing" snapPoints="true" splitTetras="true" draw="true"
+            size="0.2" alphaLong="0.2" alphaShort="0.4"
+            inputPoints="@surface.position" inputTriangles="@surface.triangles" inputQuads="@surface.quads" />
+        <OglModel name="VisualModel" src="@surface" color="1.0 0.0 0.0 1.0" />
+    </Node>
+
+    <Node name="Tongue">
+        <VisualStyle displayFlags="showForceFields" />
+        <EulerImplicitSolver name="odesolver" />
+        <CGLinearSolver iterations="10" name="linear solver" tolerance="1.0e-9" threshold="1.0e-9" />
+        <TetrahedronSetTopologyContainer name="volume"
+            points="@../input-tongue/stuffing.outputPoints"
+            tetras="@../input-tongue/stuffing.outputTetras" />
+        <TetrahedronSetGeometryAlgorithms name="GeomAlgo" />
+        <MechanicalObject name="mecaTongue" />
+        <DiagonalMass massDensity="1" name="computed using mass density" />
+        <TetrahedralCorotationalFEMForceField name="FEM" youngModulus="3000" poissonRatio="0.45" method="large" />
+
+        <Node name="TongueVisualModel">
+            <MeshOBJLoader name="meshLoader_Tongue" filename="./mesh/tongue.obj" handleSeams="1" />
+            <OglModel name="TongueVisualModel" src="@meshLoader_Tongue" texturename="./mesh/tongue_color.png" />
+            <BarycentricMapping name="tongueMapping" input="@../mecaTongue" output="@TongueVisualModel" />
+        </Node>
+
+        <Node name="TongueCollisionModel">
+            <TriangleSetTopologyContainer name="TriContainer" />
+            <TriangleSetTopologyModifier name="Modifier" />
+            <TriangleSetGeometryAlgorithms name="GeomAlgo" />
+            <Tetra2TriangleTopologicalMapping name="mapping" input="@../volume" output="@TriContainer" flipNormals="0" />
+            <MechanicalObject name="colTongue" />
+            <TriangleCollisionModel name="tongue" />
+            <IdentityMapping name="identityMappingToCollision" input="@../mecaTongue" output="@colTongue" isMechanical="false" />
+        </Node>
+    </Node>
+
+    <Node name="Instrument">
+        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.01" rayleighMass="0.1" />
+        <SparseLDLSolver template="CompressedRowSparseMatrixMat3x3d"/>
+
+        <MechanicalObject name="instrumentState" template="Rigid3" />
+        <UniformMass name="mass" totalMass="1.0" />
+
+        <RestShapeSpringsForceField stiffness="1000000" angularStiffness="1000000"
+            external_rest_shape="@../HaplyMO" points="0" external_points="0"/>
+        <LCPForceFeedback name="LCPFF1" activate="true" forceCoef="0.0005" />
+        <LinearSolverConstraintCorrection />
+
+        <Node name="VisuTool">
+            <MeshOBJLoader name="meshLoader_Instrument" filename="./mesh/dental_instrument.obj" handleSeams="1"
+                rotation="-90 -90 0" translation="0 -3.5 0.3"/>
+            <OglModel name="InstrumentVisualModel" src="@meshLoader_Instrument" color="1.0 0.2 0.2 1.0" />
+            <RigidMapping name="MM->VM mapping" input="@instrumentState" output="@InstrumentVisualModel" />
+        </Node>
+
+        <Node name="CollisionModel">
+            <MeshOBJLoader name="loader" filename="./mesh/dental_instrument_centerline.obj"
+                rotation="@../VisuTool/meshLoader_Instrument.rotation"
+                translation="@../VisuTool/meshLoader_Instrument.translation"/>
+            <MeshTopology src="@loader" name="InstrumentCollisionModel" />
+            <MechanicalObject src="@loader" name="instrumentCollisionState" />
+            <LineCollisionModel />
+            <PointCollisionModel />
+            <RigidMapping name="MM->CM mapping" input="@instrumentState" output="@instrumentCollisionState" />
+        </Node>
+    </Node>
+</Node>
