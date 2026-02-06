@@ -77,7 +77,7 @@
 
     <Node name="Gum">
         <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.1" rayleighMass="0.1" />
-        <CGLinearSolver name="linear solver" iterations="15" tolerance="1e-10" threshold="10e-10" />
+        <CGLinearSolver name="linear solver" iterations="20" tolerance="1e-10" threshold="10e-10" />
  
         <MeshGmshLoader filename="./mesh/CylinderThick.msh" name="meshLoader" scale3d="1 1 1" rotation="90 0 0" translation="0 0 0"/>
         <MechanicalObject name="dofs" src="@meshLoader" />
@@ -87,7 +87,7 @@
 
         <TetrahedronFEMForceField name="FEM" youngModulus="3000000" poissonRatio="0.45" method="large" />
         <DiagonalMass massDensity="150.0" topology="@TetraContainer" geometryState="@dofs"/>
-        <RestShapeSpringsForceField name="shapeSprings" stiffness="3000" />
+        <RestShapeSpringsForceField name="shapeSprings" stiffness="10000" />
         
         <!-- <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/> -->
         <PrecomputedConstraintCorrection recompute="0" printLog="0" fileCompliance="./CylinderThick.comp"/>
