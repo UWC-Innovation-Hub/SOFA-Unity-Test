@@ -1,0 +1,82 @@
+<?xml version="1.0" ?>
+<Node name="root" dt="0.05" showBoundingTree="0" gravity="0 0 0">
+    <Node name="RequiredPlugins">
+        <RequiredPlugin name="Sofa.Component.AnimationLoop"/>
+        <RequiredPlugin name="Sofa.Component.Collision.Detection.Algorithm"/>
+        <RequiredPlugin name="Sofa.Component.Collision.Detection.Intersection"/>
+        <RequiredPlugin name="Sofa.Component.Collision.Geometry"/>
+        <RequiredPlugin name="Sofa.Component.Collision.Response.Contact"/>
+        <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Correction"/>
+        <RequiredPlugin name="Sofa.Component.Constraint.Lagrangian.Solver"/>
+        <RequiredPlugin name="Sofa.Component.Haptics"/>
+        <RequiredPlugin name="Sofa.Component.IO.Mesh"/>
+        <RequiredPlugin name="Sofa.Component.LinearSolver.Direct"/>
+        <RequiredPlugin name="Sofa.Component.Mapping.NonLinear"/>
+        <RequiredPlugin name="Sofa.Component.Mass"/>
+        <RequiredPlugin name="Sofa.Component.ODESolver.Backward"/>
+        <RequiredPlugin name="Sofa.Component.SceneUtility"/>
+        <RequiredPlugin name="Sofa.Component.SolidMechanics.Spring"/>
+        <RequiredPlugin name="Sofa.Component.StateContainer"/>
+        <RequiredPlugin name="Sofa.Component.Topology.Container.Constant"/>
+        <RequiredPlugin name="Sofa.GL.Component.Rendering3D"/>
+        <RequiredPlugin name="SofaHaplyRobotics"/>
+    </Node>
+
+    <FreeMotionAnimationLoop/>
+    <LCPConstraintSolver tolerance="0.001" maxIt="1000"/>
+
+    <CollisionPipeline name="pipeline" depth="6" verbose="0"/>
+    <BruteForceBroadPhase/>
+    <BVHNarrowPhase/>
+    <CollisionResponse name="response" response="FrictionContactConstraint" />
+    <LocalMinDistance name="proximity" alarmDistance="0.2" contactDistance="0.05" angleCone="0.0" />
+
+    <Haply_Inverse3Controller name="Device" scale="40.0" drawDebug="0"
+        positionBase="3 0 0" orientationBase="0 0 -0.7071068 0.7071068"/>
+    <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
+
+    <Node name="Instrument" >
+        <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.01" rayleighMass="0.1" />
+        <SparseLDLSolver template="CompressedRowSparseMatrixMat3x3d"/>
+
+        <MechanicalObject name="instrumentState" template="Rigid3" />
+        <UniformMass name="mass" totalMass="1" />
+
+        <RestShapeSpringsForceField stiffness="1000000" angularStiffness="1000000"
+            external_rest_shape="@../HaplyMO" points="0" external_points="0"/>
+        <LCPForceFeedback name="LCPFF1" activate="true" forceCoef="0.00005"/>
+        <LinearSolverConstraintCorrection />
+
+        <Node name="VisuTool" >
+            <MeshOBJLoader name="meshLoader_1" filename="./mesh/dental_instrument.obj" handleSeams="1"
+                rotation="-90 -90 0" translation="0 -3.5 0.3"/>
+            <OglModel name="InstrumentVisualModel" src="@meshLoader_1" color="1.0 0.2 0.2 1.0" />
+            <RigidMapping name="MM->VM mapping" input="@instrumentState" output="@InstrumentVisualModel" />
+        </Node>
+
+        <Node name="CollisionModel" >
+            <MeshOBJLoader name="loader" filename="./mesh/dental_instrument_centerline.obj"
+                rotation="@../VisuTool/meshLoader_1.rotation" translation="@../VisuTool/meshLoader_1.translation"/>
+            <MeshTopology src="@loader" name="InstrumentCollisionModel" />
+            <MechanicalObject src="@loader" name="instrumentCollisionState" />
+            <LineCollisionModel />
+            <PointCollisionModel />
+            <RigidMapping name="MM->CM mapping" input="@instrumentState" output="@instrumentCollisionState" />
+        </Node>
+    </Node>
+
+    <Node name="Tooth">
+        <Node name="VisualModel">
+            <MeshOBJLoader name="meshLoader_0" filename="./mesh/Tooth.obj" handleSeams="1" />
+            <OglModel name="ToothVisualModel" src="@meshLoader_0" color="1 1 1 1" />
+        </Node>
+        <Node name="CollisionModel" >
+            <MeshOBJLoader filename="./mesh/Tooth.obj" name="loader"/>
+            <MeshTopology src="@loader" name="ToothCollisionModel" />
+            <MechanicalObject src="@loader" name="ToothState" />
+            <TriangleCollisionModel contactStiffness="100" simulated="0" moving="0"/>
+            <LineCollisionModel contactStiffness="100" simulated="0" moving="0"/>
+            <PointCollisionModel contactStiffness="100" simulated="0" moving="0"/>
+        </Node>
+    </Node>
+</Node>
