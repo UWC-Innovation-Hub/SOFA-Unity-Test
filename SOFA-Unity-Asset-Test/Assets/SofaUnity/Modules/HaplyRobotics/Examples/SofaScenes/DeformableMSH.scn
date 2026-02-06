@@ -40,7 +40,7 @@
     <BruteForceBroadPhase/>
     <BVHNarrowPhase/>
     <CollisionResponse name="response" response="FrictionContactConstraint" />
-    <LocalMinDistance name="proximity" alarmDistance="0.3" contactDistance="0.15" angleCone="0.1" />
+    <LocalMinDistance name="proximity" alarmDistance="0.2" contactDistance="0.1" angleCone="0.1" />
 
     <Haply_Inverse3Controller name="Device" scale="60.0" drawDebug="0" positionBase="0 6 -4" orientationBase="0 0 -0.7071068 0.7071068 " damping="0.001"/>
     <MechanicalObject template="Rigid3d" name="HaplyMO" position="@Device.positionDevice" />
@@ -68,8 +68,8 @@
                 rotation="@../VisuTool/meshLoader_1.rotation" translation="@../VisuTool/meshLoader_1.translation"/>
             <MeshTopology src="@loader" name="InstrumentCollisionModel" />
             <MechanicalObject src="@loader" name="instrumentCollisionState" />
-            <LineCollisionModel group="1 2" radius="0.3" />
-            <PointCollisionModel group="1 2" radius="0.3" />
+            <LineCollisionModel />
+            <PointCollisionModel />
             <RigidMapping name="MM->CM mapping" input="@instrumentState" output="@instrumentCollisionState" />		
         </Node>
 
@@ -100,26 +100,13 @@
 			<TriangleSetTopologyModifier   name="TriModifier1" />
 			<TriangleSetGeometryAlgorithms name="TriGeomAlgo1" template="Vec3d" />
             <Tetra2TriangleTopologicalMapping input="@../TetraContainer" output="@TriContainer1"/>
-            <TriangleCollisionModel contactStiffness="1000" group="1" />
-            <LineCollisionModel contactStiffness="1000" group="1" />
-            <PointCollisionModel contactStiffness="1000" group="1" /> 
+            <TriangleCollisionModel contactStiffness="1000" />
+            <LineCollisionModel contactStiffness="1000" />
+            <PointCollisionModel contactStiffness="1000" /> 
             <Node name="Visu1">
                 <OglModel name="Visual" texturename="textures/colorMap.png" />
                 <IdentityMapping input="@../" output="@Visual" />
             </Node>
-        </Node>
-    </Node>
-
-    <Node name="Tooth">
-        <MeshOBJLoader name="toothLoader" filename="./mesh/Tooth.obj" handleSeams="1" translation="2 0 0" />
-        <MeshTopology src="@toothLoader" name="ToothCollisionModel" />
-        <MechanicalObject src="@toothLoader" name="toothState" />
-        <TriangleCollisionModel contactStiffness="1000" simulated="0" moving="0" group="2" />
-        <LineCollisionModel contactStiffness="1000" simulated="0" moving="0" group="2" />
-        <PointCollisionModel contactStiffness="1000" simulated="0" moving="0" group="2" />
-        <Node name="ToothVisual">
-            <OglModel name="ToothVisualModel" src="@toothLoader" color="0.9 0.9 0.9 1.0" />
-            <IdentityMapping input="@../" output="@ToothVisualModel" />
         </Node>
     </Node>
 </Node>
