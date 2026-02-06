@@ -53,7 +53,7 @@
 		<UniformMass name="mass" totalMass="1.0" />
 		
 		<RestShapeSpringsForceField stiffness='1000000' angularStiffness='1000000' external_rest_shape='@../HaplyMO' points='0' external_points='0'/>
-        <LCPForceFeedback name="LCPFF1" activate="true" forceCoef="0.0005" />
+        <LCPForceFeedback name="LCPFF1" activate="true" forceCoef="0.001" />
         <LinearSolverConstraintCorrection />
 		
 		<Node name="VisuTool" >
@@ -87,7 +87,7 @@
 
         <TetrahedronFEMForceField name="FEM" youngModulus="3000000" poissonRatio="0.45" method="large" />
         <DiagonalMass massDensity="150.0" topology="@TetraContainer" geometryState="@dofs"/>
-        <RestShapeSpringsForceField name="shapeSprings" stiffness="10000" />
+        <RestShapeSpringsForceField name="shapeSprings" stiffness="5000" />
         
         <!-- <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/> -->
         <PrecomputedConstraintCorrection recompute="0" printLog="0" fileCompliance="./CylinderThick.comp"/>
@@ -100,9 +100,9 @@
 			<TriangleSetTopologyModifier   name="TriModifier1" />
 			<TriangleSetGeometryAlgorithms name="TriGeomAlgo1" template="Vec3d" />
             <Tetra2TriangleTopologicalMapping input="@../TetraContainer" output="@TriContainer1"/>
-            <TriangleCollisionModel />
-            <LineCollisionModel />
-            <PointCollisionModel /> 
+            <TriangleCollisionModel contactStiffness="1000" />
+            <LineCollisionModel contactStiffness="1000" />
+            <PointCollisionModel contactStiffness="1000" /> 
             <Node name="Visu1">
                 <OglModel name="Visual" texturename="textures/colorMap.png" />
                 <IdentityMapping input="@../" output="@Visual" />
