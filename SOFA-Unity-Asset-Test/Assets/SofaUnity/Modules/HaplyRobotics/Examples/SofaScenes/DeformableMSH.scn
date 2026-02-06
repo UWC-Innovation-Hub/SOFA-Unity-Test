@@ -77,9 +77,9 @@
 
     <Node name="Gum">
         <EulerImplicitSolver name="ODE solver" rayleighStiffness="0.1" rayleighMass="0.1" />
-        <CGLinearSolver name="linear solver" iterations="25" tolerance="1e-10" threshold="10e-10" />
+        <CGLinearSolver name="linear solver" iterations="15" tolerance="1e-10" threshold="10e-10" />
  
-        <MeshGmshLoader filename="./mesh/CylinderThick.msh" name="meshLoader" scale3d="1 1 1" rotation="0 0 0" translation="0 0 3"/>
+        <MeshGmshLoader filename="./mesh/CylinderThick.msh" name="meshLoader" scale3d="1 1 1" rotation="90 0 0" translation="0 0 0"/>
         <MechanicalObject name="dofs" src="@meshLoader" />
 		<TetrahedronSetTopologyContainer name="TetraContainer" src="@meshLoader" />
         <TetrahedronSetTopologyModifier name="Modifier" />
@@ -92,7 +92,7 @@
         <!-- <PlaneForceField normal="0 0 1" d="-5" stiffness="100000" showPlane="1" showPlaneSize="20"/> -->
         <PrecomputedConstraintCorrection recompute="0" printLog="0" fileCompliance="./CylinderThick.comp"/>
 
-        <BoxROI name="FixedROI" box="-1.490393 -1.490393 2.011905 1.490393 1.490393 2.308333" />
+        <BoxROI name="FixedROI" box="-1.490393 0.691667 -1.490393 1.490393 0.988095 1.490393" />
         <FixedProjectiveConstraint indices="@FixedROI.indices" />
 
         <Node name="Surface">
