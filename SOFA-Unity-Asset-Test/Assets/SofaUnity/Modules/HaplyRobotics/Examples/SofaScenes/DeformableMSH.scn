@@ -109,4 +109,19 @@
             </Node>
         </Node>
     </Node>
+
+    <Node name="Tooth" >
+        <Node name="VisualModel" >
+            <MeshOBJLoader name="meshLoader_0" filename="./mesh/Tooth.obj" handleSeams="1" rotation="0 90 90" translation="0 0 5"/>
+            <OglModel name="ToothVisualModel" src="@meshLoader_0" color="1 0.8 0 1" /> 
+        </Node>
+        <Node name="ToothCollisionModel" >
+            <MeshOBJLoader filename="./mesh/TootLowPoly.obj" handleSeams="1" translation="-5 0 0" rotation="0 0 0" name="loader_1"/>
+            <MeshTopology src="@loader_1" name="ToothCollisionModelTopology"  />
+            <MechanicalObject src="@loader_1" name="ToothState" />        
+            <TriangleCollisionModel contactStiffness="100" simulated="0" moving="0"/>
+            <LineCollisionModel contactStiffness="100" simulated="0" moving="0"/>    
+            <PointCollisionModel contactStiffness="100" simulated="0" moving="0"/>   
+        </Node>
+    </Node>
 </Node>
